@@ -11,15 +11,17 @@ import tkinter
 
 
 def microsoft_login():
+    username = os.environ['username']
+    password = os.environ['password']
     sleep(5)
     login_email = driver.find_element(By.ID, "i0116").send_keys(username, Keys.ENTER)
     sleep(2)
     login_password = driver.find_element(By.ID, "i0118").send_keys(password, Keys.ENTER)
 
 
-def fill_ticket(name, email, selection):
+def fill_ticket(name, email, chosen_script):
     PLACEHOLDER = '[name]'
-    sleep(5)
+    sleep(10)
     requester_box = driver.find_element(By.CLASS_NAME, "controllerSelector.input_common__input___3x9J-.Input__inputIconRight___2KMWt")
     requester_box.clear()
     requester_box.send_keys(email)
@@ -29,7 +31,7 @@ def fill_ticket(name, email, selection):
     iframe = driver.find_element(By.ID, 'react-tinymce-0_ifr')
     driver.switch_to.frame(iframe)
     description_box = driver.find_element(By.ID, 'tinymce')
-    with open("Ticket-Scripts/Password Reset") as script:
+    with open(f"Ticket-Scripts/{chosen_script}") as script:
         selected_script = script.read()
         selected_script = selected_script.replace(PLACEHOLDER, name)
         description_box.send_keys(selected_script)
@@ -56,62 +58,26 @@ def get_email():
     return input("What is the email? ")
 
 
-
-
-def graphic_ui():
-    def save():
-        global name
-        global email
-        global script
-        name = input_name.get()
-        email = input_email.get()
-        script = listbox.get(listbox.curselection())
-    print(name)
-    print(email)
-    print(script)
-    window = tkinter.Tk()
-    window.title("Auto Ticket Maker")
-    window.minsize(width=300, height=200)
-    my_label = tkinter.Label(text="Easy Auto Ticket Maker")
-    my_label.pack()
-    button = tkinter.Button(text="Create It", command=save)
-    button.pack()
-    #Name of input label
-    input_label_name = tkinter.Label(text="Insert Name (First Name Only)")
-    input_label_name.pack()
-    #Just the input box for name 
-    input_name = tkinter.Entry()
-    input_name.pack()
-    #Just the label for the email box
-    input_email_name = tkinter.Label(text="Insert Email Address")
-    input_email_name.pack()
-    #Just the input box for email
-    input_email = tkinter.Entry()
-    input_email.pack()
-    #The list box
-    listbox = tkinter.Listbox(height=len(os.listdir("Ticket-Scripts/")))
-    scripts = os.listdir("Ticket-Scripts/")
-    for script in scripts:
-        listbox.insert(scripts.index(script), script)
-    listbox.bind("<<ListboxSelect>>")
-    listbox.pack()
-    window.mainloop()
+def list_scripts():
+    list_folder = os.listdir("Ticket-Scripts")
+    print(list_folder)
+    chosen_script = int(input("Choose a script: "))
+    chosen_script = list_folder[chosen_script]
+    return chosen_script
     
 def main():
-    graphic_ui()
-    print(name)
-    # name = get_name()
-    # email = get_email()
-    # driver.get("https://eitc.samanage.com/incidents/new")
-    # driver.maximize_window()
+    
+    name = get_name()
+    email = get_email()
+    script = list_scripts()
+    driver.get("https://eitc.samanage.com/incidents/new")
+    driver.maximize_window()
     # microsoft_login()
-    # fill_ticket(name, email, selection)
-    # select_category()
+    fill_ticket(name, email, script)
+    select_category()
 
-# service = ChromeService(executable_path=ChromeDriverManager().install())
-# driver = webdriver.Chrome(service=service)
-# username = os.environ['username']
-# password = os.environ['password']
+service = ChromeService(executable_path=ChromeDriverManager().install())
+driver = webdriver.Chrome(service=service)
 
 if __name__ == "__main__":
     main()
