@@ -26,6 +26,7 @@ def fill_ticket(name, email, chosen_script):
     requester_box.clear()
     requester_box.send_keys(email)
     title_box = driver.find_element(By.NAME, "name")
+    #This has to change everytime it is a different ticket
     title_box.send_keys("Password Reset")
     sleep(1)
     iframe = driver.find_element(By.ID, 'react-tinymce-0_ifr')
@@ -42,6 +43,7 @@ def select_category():
     subcategory = driver.find_element(By.XPATH, '//*[@id="new_incident"]/div/div[2]/div/div/div/div[1]/div[1]/div[6]/div/div/span[2]/div/div/div/div/div[1]/div/div/span')
     subcategory.click()
     subcategory = driver.find_element(By.CLASS_NAME, 'DropdownSearch__searchInput___2cj2_')
+    #This has to change everytime it is a different ticket
     subcategory.send_keys("Password Reset", Keys.ARROW_DOWN, Keys.ARROW_DOWN, Keys.ENTER)
 
 
@@ -60,21 +62,24 @@ def get_email():
 
 def list_scripts():
     list_folder = os.listdir("Ticket-Scripts")
-    print(list_folder)
+    length = (len(list_folder))
+    for i in range(length):
+        print (f"{i}.) {list_folder[i]}")
     chosen_script = int(input("Choose a script: "))
     chosen_script = list_folder[chosen_script]
     return chosen_script
     
 def main():
-    
     name = get_name()
     email = get_email()
     script = list_scripts()
+    # category = list_category()
     driver.get("https://eitc.samanage.com/incidents/new")
     driver.maximize_window()
     # microsoft_login()
     fill_ticket(name, email, script)
     select_category()
+    send_ticket()
 
 service = ChromeService(executable_path=ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service)
