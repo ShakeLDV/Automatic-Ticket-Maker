@@ -27,7 +27,7 @@ def fill_ticket(name, email, chosen_script):
     requester_box.send_keys(email)
     title_box = driver.find_element(By.NAME, "name")
     #This has to change everytime it is a different ticket
-    title_box.send_keys("Password Reset")
+    title_box.send_keys(chosen_script)
     sleep(1)
     iframe = driver.find_element(By.ID, 'react-tinymce-0_ifr')
     driver.switch_to.frame(iframe)
@@ -62,6 +62,7 @@ def get_email():
 
 def list_scripts():
     list_folder = os.listdir("Ticket-Scripts")
+    list_folder = [i.split(".txt")[0] for i in list_folder]
     length = (len(list_folder))
     for i in range(length):
         print (f"{i}.) {list_folder[i]}")
@@ -73,16 +74,17 @@ def main():
     name = get_name()
     email = get_email()
     script = list_scripts()
-    # category = list_category()
+    service = ChromeService(executable_path=ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service)
     driver.get("https://eitc.samanage.com/incidents/new")
     driver.maximize_window()
-    # microsoft_login()
+    if driver.title == "Sign in to your account":
+        microsoft_login()
     fill_ticket(name, email, script)
-    select_category()
-    send_ticket()
+    select_category(script[0])
+    # send_ticket()
 
-service = ChromeService(executable_path=ChromeDriverManager().install())
-driver = webdriver.Chrome(service=service)
+
 
 if __name__ == "__main__":
     main()
