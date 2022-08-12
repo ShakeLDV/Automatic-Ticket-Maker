@@ -11,11 +11,11 @@ import tkinter
 
 
 def microsoft_login():
-    username = os.environ['username']
-    password = os.environ['password']
+    username = os.environ('username')
+    password = os.environ('password')
     sleep(5)
     login_email = driver.find_element(By.ID, "i0116").send_keys(username, Keys.ENTER)
-    sleep(2)
+    sleep(3)
     login_password = driver.find_element(By.ID, "i0118").send_keys(password, Keys.ENTER)
 
 
@@ -28,6 +28,7 @@ def fill_ticket(name, email, chosen_script):
     title_box = driver.find_element(By.NAME, "name")
     #This has to change everytime it is a different ticket
     title_box.send_keys(chosen_script)
+    chosen_script = chosen_script + ".txt"
     sleep(1)
     iframe = driver.find_element(By.ID, 'react-tinymce-0_ifr')
     driver.switch_to.frame(iframe)
@@ -39,18 +40,19 @@ def fill_ticket(name, email, chosen_script):
     driver.switch_to.default_content() 
 
 
-def select_category():
+def select_category(category):
     subcategory = driver.find_element(By.XPATH, '//*[@id="new_incident"]/div/div[2]/div/div/div/div[1]/div[1]/div[6]/div/div/span[2]/div/div/div/div/div[1]/div/div/span')
     subcategory.click()
     subcategory = driver.find_element(By.CLASS_NAME, 'DropdownSearch__searchInput___2cj2_')
     #This has to change everytime it is a different ticket
-    subcategory.send_keys("Password Reset", Keys.ARROW_DOWN, Keys.ARROW_DOWN, Keys.ENTER)
+    subcategory.send_keys(category)
+    sleep(2)
+    subcategory.send_keys(Keys.ARROW_DOWN, Keys.ARROW_DOWN, Keys.ENTER)
 
 
 def send_ticket():
     create_ticket_button = driver.find_element(By.CLASS_NAME, 'Button__button___2F6IB.ButtonSkins__commonSkin___2Proz.ButtonSkins__main___30X1Z.Button__large___1_y4D.Button__nowrap___26yBf')
     create_ticket_button.click()
-
 
 def get_name():
     return input("What is the name? (first names only) ").title()
@@ -71,6 +73,8 @@ def list_scripts():
     return chosen_script
     
 def main():
+    global service
+    global driver
     name = get_name()
     email = get_email()
     script = list_scripts()
@@ -78,12 +82,12 @@ def main():
     driver = webdriver.Chrome(service=service)
     driver.get("https://eitc.samanage.com/incidents/new")
     driver.maximize_window()
+    sleep(5)
     if driver.title == "Sign in to your account":
         microsoft_login()
     fill_ticket(name, email, script)
     select_category(script[0])
     # send_ticket()
-
 
 
 if __name__ == "__main__":
