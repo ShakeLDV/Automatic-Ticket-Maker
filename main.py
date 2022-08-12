@@ -5,11 +5,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from time import sleep
 import os
+import tkinter
 
-service = ChromeService(executable_path=ChromeDriverManager().install())
-driver = webdriver.Chrome(service=service)
-username = os.environ['username']
-password = os.environ['password']
+
 
 
 def microsoft_login():
@@ -19,7 +17,7 @@ def microsoft_login():
     login_password = driver.find_element(By.ID, "i0118").send_keys(password, Keys.ENTER)
 
 
-def fill_ticket(name, email):
+def fill_ticket(name, email, selection):
     PLACEHOLDER = '[name]'
     sleep(5)
     requester_box = driver.find_element(By.CLASS_NAME, "controllerSelector.input_common__input___3x9J-.Input__inputIconRight___2KMWt")
@@ -36,7 +34,7 @@ def fill_ticket(name, email):
         selected_script = selected_script.replace(PLACEHOLDER, name)
         description_box.send_keys(selected_script)
     driver.switch_to.default_content() 
-# description_box.send_keys(f"Hello {name},\nThe password for your school account has been reset at your request. Please let us know if you have any other issues concerning your login information\nThank you!\nIT Help Desk\n(208)535-5444")
+
 
 def select_category():
     subcategory = driver.find_element(By.XPATH, '//*[@id="new_incident"]/div/div[2]/div/div/div/div[1]/div[1]/div[6]/div/div/span[2]/div/div/div/div/div[1]/div/div/span')
@@ -52,18 +50,68 @@ def send_ticket():
 
 def get_name():
     return input("What is the name? (first names only) ").title()
-    
-    
+
+
 def get_email():
     return input("What is the email? ")
 
 
-if __name__ == "__main__":
-    name = get_name()
-    email = get_email()
-    driver.get("https://eitc.samanage.com/incidents/new")
-    driver.maximize_window()
-    microsoft_login()
-    fill_ticket(name, email)
-    select_category()
 
+
+def graphic_ui():
+    def save():
+        global name
+        global email
+        global script
+        name = input_name.get()
+        email = input_email.get()
+        script = listbox.get(listbox.curselection())
+    print(name)
+    print(email)
+    print(script)
+    window = tkinter.Tk()
+    window.title("Auto Ticket Maker")
+    window.minsize(width=300, height=200)
+    my_label = tkinter.Label(text="Easy Auto Ticket Maker")
+    my_label.pack()
+    button = tkinter.Button(text="Create It", command=save)
+    button.pack()
+    #Name of input label
+    input_label_name = tkinter.Label(text="Insert Name (First Name Only)")
+    input_label_name.pack()
+    #Just the input box for name 
+    input_name = tkinter.Entry()
+    input_name.pack()
+    #Just the label for the email box
+    input_email_name = tkinter.Label(text="Insert Email Address")
+    input_email_name.pack()
+    #Just the input box for email
+    input_email = tkinter.Entry()
+    input_email.pack()
+    #The list box
+    listbox = tkinter.Listbox(height=len(os.listdir("Ticket-Scripts/")))
+    scripts = os.listdir("Ticket-Scripts/")
+    for script in scripts:
+        listbox.insert(scripts.index(script), script)
+    listbox.bind("<<ListboxSelect>>")
+    listbox.pack()
+    window.mainloop()
+    
+def main():
+    graphic_ui()
+    print(name)
+    # name = get_name()
+    # email = get_email()
+    # driver.get("https://eitc.samanage.com/incidents/new")
+    # driver.maximize_window()
+    # microsoft_login()
+    # fill_ticket(name, email, selection)
+    # select_category()
+
+# service = ChromeService(executable_path=ChromeDriverManager().install())
+# driver = webdriver.Chrome(service=service)
+# username = os.environ['username']
+# password = os.environ['password']
+
+if __name__ == "__main__":
+    main()
