@@ -86,8 +86,8 @@ def main():
     if driver.title == "Sign in to your account":
         microsoft_login()
     fill_ticket(name, email, script)
-    select_category(script[0])
-    # send_ticket()
+    select_category(script.split()[0])
+    send_ticket()
 
 
 if __name__ == "__main__":
