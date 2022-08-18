@@ -5,7 +5,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from time import sleep
 import os
-import tkinter
 
 
 
@@ -53,6 +52,8 @@ def select_category(category):
 def send_ticket():
     create_ticket_button = driver.find_element(By.CLASS_NAME, 'Button__button___2F6IB.ButtonSkins__commonSkin___2Proz.ButtonSkins__main___30X1Z.Button__large___1_y4D.Button__nowrap___26yBf')
     create_ticket_button.click()
+    sleep(5)
+    driver.quit()
 
 def get_name():
     return input("What is the name? (first names only) ").title()
@@ -60,6 +61,9 @@ def get_name():
 
 def get_email():
     return input("What is the email? ")
+
+def refresh_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 
 def list_scripts():
@@ -73,21 +77,26 @@ def list_scripts():
     return chosen_script
     
 def main():
-    global service
-    global driver
-    name = get_name()
-    email = get_email()
-    script = list_scripts()
-    service = ChromeService(executable_path=ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service)
-    driver.get("https://eitc.samanage.com/incidents/new")
-    driver.maximize_window()
-    sleep(5)
-    if driver.title == "Sign in to your account":
-        microsoft_login()
-    fill_ticket(name, email, script)
-    select_category(script.split()[0])
-    send_ticket()
+    finish = False
+    while finish == False:
+        global service
+        global driver
+        name = get_name()
+        if name == "Exit":
+            break
+        email = get_email()
+        script = list_scripts()
+        service = ChromeService(executable_path=ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service)
+        driver.get("https://eitc.samanage.com/incidents/new")
+        driver.minimize_window()
+        sleep(5)
+        if driver.title == "Sign in to your account":
+            microsoft_login()
+        fill_ticket(name, email, script)
+        select_category(script.split()[0])
+        send_ticket()
+        refresh_screen()
 
 
 if __name__ == "__main__":
