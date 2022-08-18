@@ -7,8 +7,6 @@ from time import sleep
 import os
 
 
-
-
 def microsoft_login():
     username = os.environ('username')
     password = os.environ('password')
@@ -55,12 +53,14 @@ def send_ticket():
     sleep(5)
     driver.quit()
 
+
 def get_name():
     return input("What is the name? (first names only) ").title()
 
 
 def get_email():
     return input("What is the email? ")
+
 
 def refresh_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -75,6 +75,7 @@ def list_scripts():
     chosen_script = int(input("Choose a script: "))
     chosen_script = list_folder[chosen_script]
     return chosen_script
+
     
 def main():
     finish = False
