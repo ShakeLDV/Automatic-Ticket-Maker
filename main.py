@@ -8,8 +8,8 @@ import os
 
 
 def microsoft_login():
-    username = os.environ('username')
-    password = os.environ('password')
+    username = os.environ['username']
+    password = os.environ['password']
     sleep(5)
     login_email = driver.find_element(By.ID, "i0116").send_keys(username, Keys.ENTER)
     sleep(3)
@@ -96,7 +96,7 @@ def main():
             microsoft_login()
         fill_ticket(name, email, script)
         select_category(script.split()[0])
-        send_ticket()
+        # send_ticket()
         refresh_screen()
 
 
