@@ -96,7 +96,7 @@ def main():
             microsoft_login()
         fill_ticket(name, email, script)
         select_category(script.split()[0])
-        # send_ticket()
+        send_ticket()
         refresh_screen()
 
 
