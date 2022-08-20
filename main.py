@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -8,12 +9,9 @@ import os
 
 
 def microsoft_login():
-    username = os.environ['username']
-    password = os.environ['password']
-    sleep(5)
-    login_email = driver.find_element(By.ID, "i0116").send_keys(username, Keys.ENTER)
-    sleep(3)
-    login_password = driver.find_element(By.ID, "i0118").send_keys(password, Keys.ENTER)
+    refresh_screen()
+    print("Please sign-in to your account and wait 10 seconds.")
+    sleep(10)
 
 
 def fill_ticket(name, email, chosen_script):
@@ -87,8 +85,10 @@ def main():
             break
         email = get_email()
         script = list_scripts()
+        options = Options()
+        options.add_argument("--user-data-dir=C:\\temp\\userdata")
         service = ChromeService(executable_path=ChromeDriverManager().install())
-        driver = webdriver.Chrome(service=service)
+        driver = webdriver.Chrome(service=service, options=options)
         driver.get("https://eitc.samanage.com/incidents/new")
         driver.minimize_window()
         sleep(5)
@@ -96,7 +96,7 @@ def main():
             microsoft_login()
         fill_ticket(name, email, script)
         select_category(script.split()[0])
-        send_ticket()
+        # send_ticket()
         refresh_screen()
 
 
