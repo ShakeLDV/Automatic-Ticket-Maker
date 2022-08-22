@@ -1,0 +1,4 @@
+Hello [name],
+Thanks for reaching out. You recently called in due to some issues with logging into the payment portal. The username used for the payment portal is just your firstname.lastname you don't have to add in the @cei.edu at the end of it. The password used for the payment portal is the same as your MyCEI apps and Canvas login. If you are still experiencing some issues please let us know by calling us.
+IT Help Desk
+(208)535-5444
