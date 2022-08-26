@@ -1,3 +1,4 @@
+generic
 Hello [name],
 You recently received assistance from the IT Help Desk. It has been a pleasure talking to you. If you have any questions or concerns please let us know by calling us or stopping by the Help Desk (Located at Building 2 Room 290).
 Thank you!

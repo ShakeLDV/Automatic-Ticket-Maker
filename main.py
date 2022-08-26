@@ -21,18 +21,28 @@ def fill_ticket(name, email, chosen_script):
     requester_box.clear()
     requester_box.send_keys(email)
     title_box = driver.find_element(By.NAME, "name")
-    #This has to change everytime it is a different ticket
+    #Title of the ticket
     title_box.send_keys(chosen_script)
+    #Selecting the script
     chosen_script = chosen_script + ".txt"
     sleep(1)
+    #Selecting the description box---
     iframe = driver.find_element(By.ID, 'react-tinymce-0_ifr')
     driver.switch_to.frame(iframe)
     description_box = driver.find_element(By.ID, 'tinymce')
+    #-----
     with open(f"Ticket-Scripts/{chosen_script}") as script:
-        selected_script = script.read()
+        selected_script = script.readlines()
+        with open('temp/tmp.txt', "w+") as script2:
+            #Writes into temp folder into tmp.txt
+            data = [script2.write(i) for i in selected_script[1:]]
+    with open('temp/tmp.txt') as script3:
+        selected_script = script3.read()
         selected_script = selected_script.replace(PLACEHOLDER, name)
         description_box.send_keys(selected_script)
     driver.switch_to.default_content() 
+
+
 
 
 def select_category(category):
@@ -40,7 +50,10 @@ def select_category(category):
     subcategory.click()
     subcategory = driver.find_element(By.CLASS_NAME, 'DropdownSearch__searchInput___2cj2_')
     #This has to change everytime it is a different ticket
-    subcategory.send_keys(category)
+    category = category + ".txt"
+    with open(f"Ticket-Scripts/{category}") as script:
+        selected_script = script.readlines()   
+    subcategory.send_keys(selected_script[0])
     sleep(2)
     subcategory.send_keys(Keys.ARROW_DOWN, Keys.ARROW_DOWN, Keys.ENTER)
 
@@ -95,7 +108,7 @@ def main():
         if driver.title == "Sign in to your account":
             microsoft_login()
         fill_ticket(name, email, script)
-        select_category(script.split()[0])
+        select_category(script)
         send_ticket()
         refresh_screen()
 
