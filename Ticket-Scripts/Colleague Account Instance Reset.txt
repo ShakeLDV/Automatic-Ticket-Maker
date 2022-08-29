@@ -1,0 +1,6 @@
+generic
+Hello [name],
+We have terminated your existing login instances within Colleague at your request. Please let us know if problems persist. 
+Thank you!
+IT Help Desk
+(208)535-5444
